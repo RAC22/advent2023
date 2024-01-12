@@ -1,6 +1,6 @@
 const fs = require("fs");
-const test = true;
-let testOrNot = test ? "./testinput.txt" : "./input.txt";
+const test = false;
+const testOrNot = test ? "./testinput.txt" : "./input.txt";
 const input = fs
 	.readFileSync(`${testOrNot}`, "utf8")
 	.split("\n")
@@ -91,3 +91,47 @@ for (const num of numsWithCoords) {
 }
 //part one output
 console.log(validNums.reduce((a, b) => a + b, 0));
+
+//find all * coords
+let asteriskCoords = [];
+for (let i = 0; i < input.length; i++) {
+	const line = input[i];
+	const row = i;
+	for (let ii = 0; ii < line.length; ii++) {
+		const character = line[ii];
+		const column = ii;
+		if (character == "*") {
+			asteriskCoords.push([row, column]);
+		}
+	}
+}
+//we already have numsWithCoords we can match those to * coords
+
+//go over asterisk coords, see if two numbercoords fall within
+//valid range. if they do multiply them push that to a list
+//sum those at the end
+let gearRatios = [];
+asteriskCoords.forEach((e) => {
+	const validRowStart = e[0] - 1;
+	const validRowEnd = e[0] + 1;
+	const validColumnStart = e[1] - 1;
+	const validColumnEnd = e[1] + 1;
+	let validCount = 0;
+	let validNums = [];
+	numsWithCoords.forEach((num) => {
+		if (validRowStart <= num.row && validRowEnd >= num.row) {
+			if (
+				(num.startIndex >= validColumnStart &&
+					num.startIndex <= validColumnEnd) ||
+				(num.endIndex >= validColumnStart && num.endIndex <= validColumnEnd)
+			) {
+				validCount++;
+				validNums.push(parseInt(num.number));
+			}
+		}
+	});
+	if (validCount == 2) {
+		gearRatios.push(validNums[0] * validNums[1]);
+	}
+});
+console.log(gearRatios.reduce((a, b) => a + b, 0));
