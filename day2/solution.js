@@ -4,7 +4,6 @@ const input = fs
 	.split("\n")
 	.map((e) => e.replace("\r", ""));
 
-//dear god
 //which games would have been possible if the bag contained only
 // 12 red cubes,
 // 13 green cubes,
